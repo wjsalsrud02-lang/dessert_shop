@@ -12,20 +12,25 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
     
-@app.route("/api/desserts")
+@app.route("/api/desserts", methods=["GET"])
 def get_desserts():
     desserts = Dessert.query.all()
-    return jsonify([
-        {
+
+    result = []
+    for d in desserts:
+        result.append({
             "id": d.id,
             "name": d.name,
             "price": d.price,
             "description": d.description,
             "image_url": d.image_url,
             "category": d.category
-        } for d in desserts
-    ])
+        })
+
+    return jsonify(result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
